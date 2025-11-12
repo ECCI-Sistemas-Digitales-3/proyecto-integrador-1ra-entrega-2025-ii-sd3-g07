@@ -2,15 +2,15 @@
 # Proyecto integrador 1ra Entrega
 
 ## Integrantes
-
-
-
+Daniel Cobos
+Camilo Cruz
+Paula Cañon
 ## Arquitectura propuesta
 
 
 
 ## Periférico a trabajar
-
+Valvulas
 
 ## Avances
 
