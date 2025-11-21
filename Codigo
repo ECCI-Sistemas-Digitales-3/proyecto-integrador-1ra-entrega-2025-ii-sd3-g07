@@ -1,0 +1,76 @@
+src/
+import network
+import time
+from machine import Pin
+from umqtt.robust import MQTTClient
+import ujson
+
+# --- CONFIGURACIÓN ---
+import wify
+BROKER = "6.tcp.ngrok.io"   # IP de tu Raspberry Pi
+PORT=18263
+TOPIC=b"bombas/control"
+# === Conexión WiFi ===
+if not wify.conectar():
+    print("Error: no se puede continuar sin conexión WiFi")
+    while True:
+        time.sleep(1)
+# --- Pines de bombas ---
+bombas = [
+    Pin(14, Pin.OUT),  # Bomba 1
+    Pin(12, Pin.OUT),  # Bomba 2
+    Pin(13, Pin.OUT),  # Bomba 3
+    Pin(27, Pin.OUT),  # Bomba 4
+    Pin(26, Pin.OUT)   # Bomba 5
+]
+
+bool flag_CYAN_galga = True
+
+# --- Callback MQTT ---
+def mensaje(topic, msg):
+    msg = msg.decode()  # Convertir bytes a texto
+    print(f"Mensaje recibido en {topic}:{msg}")
+
+    if msg == "ON_CYAN" && flag_CYAN_galga:
+        print('Entré')
+        bombas[0].value(1)
+    elif msg == "B1_OFF":
+        bombas[0].value(0)
+    elif msg == "B2_ON":
+        bombas[1].value(1)
+    elif msg == "B2_OFF":
+        bombas[1].value(0)
+    elif msg == "B3_ON":
+        bombas[2].value(1)
+    elif msg == "B3_OFF":
+        bombas[2].value(0)
+    elif msg == "B4_ON":
+        bombas[3].value(1)
+    elif msg == "B4_OFF":
+        bombas[3].value(0)
+    elif msg == "B5_ON":
+        bombas[4].value(1)
+    elif msg == "B5_OFF":
+        bombas[4].value(0)
+    else:
+        print("Comando desconocido:", msg)
+
+# --- Conexión MQTT ---
+def conectar_mqtt():
+    client = MQTTClient("ESP32_Bombas", BROKER, PORT)
+    client.set_callback(mensaje)
+    client.connect()
+    client.subscribe(TOPIC)
+    print("Conectado al broker MQTT y suscrito a 'bombas/control'")
+    return client
+
+# --- Programa principal ---
+cliente = conectar_mqtt()
+
+try:
+    while True:
+        cliente.check_msg()
+        time.sleep(0.1)
+except KeyboardInterrupt:
+    print("Desconectando...")
+    cliente.disconnect()
