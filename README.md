@@ -14,7 +14,7 @@ Cada bomba está asociada a un pin digital del ESP32, y la comunicación se real
 
 
 ## Periférico a trabajar
-Valvulas y bomba
+Electrovalvulas y bombas
 
 ## Avances
 Hasta el momento, se ha desarrollado la primera versión funcional del sistema de control remoto de bombas mediante MQTT utilizando una tarjeta ESP32.
@@ -34,7 +34,8 @@ Se programó un callback MQTT que interpreta los mensajes ON y OFF para activar 
 
 El sistema mantiene una escucha continua (check_msg()) para responder de forma inmediata a los comandos enviados.
 
-Las valvulas para cada color se instalaron.
+
+Con respecto al montaje fisico Durante las pruebas se evidenció que la electroválvula actual no proporciona el caudal suficiente. Al intentar usar una bomba de paso, el fluido se estancó en la salida, generando pérdidas de pintura. Por ello, se propone emplear una electroválvula de mayor capacidad y ubicar la bomba después de esta. Así se garantiza un flujo adecuado: la electroválvula controla la cantidad de pintura y, tras su cierre, la bomba continúa unos segundos para impulsar el remanente y evitar residuos en los conductos.
 
 ![Imagen de WhatsApp 2025-11-21 a las 11 34 07_f73c49da](https://github.com/user-attachments/assets/4298ce3a-367a-4344-8eb3-4d29d5fd97fc)
 
